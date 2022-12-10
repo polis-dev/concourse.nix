@@ -1,0 +1,39 @@
+name: main
+on:
+  push: { paths: ["*.nix"] }
+  pull_request: { paths: ["*.nix"] }
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the project.
+        uses: actions/checkout@v2
+
+      - name: setup nix.
+        uses: polis-dev/install-nix-action@master
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - run: |
+          #quick sanity checks.
+          _eval(){
+            expr="$@"
+            echo ::group::$1
+            echo ">>> '$@'" && nix eval --impure --json --expr "with builtins.getFlake \"$PWD\"; $@"
+            echo ::endgroup::$1
+          }
+
+          ### summarize the flake to be tested.
+          nix flake show && echo && nix flake metadata && echo
+
+          _eval 'lib.currentArch'
+          _eval 'lib.currentDir'
+          _eval 'lib.currentHomeDir'
+          _eval 'lib.currentOS'
+          _eval 'lib.currentShell'
+          _eval 'lib.currentSystem'
+          _eval 'lib.pnix.lastModifiedDate'
+          _eval 'lib.pnix.narHash'
