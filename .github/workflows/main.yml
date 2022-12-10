@@ -16,8 +16,8 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: pre-fetch flake & dependencies.
-        run: nix flake prefetch --recreate-lock-file
+        run: nix flake lock --recreate-lock-file
       - name: nix flake inputs.
-        run: nix flake metadata --no-warn-dirty --allow-dirty
+        run: nix flake metadata --no-update-lock-file --no-warn-dirty --allow-dirty
       - name: nix flake outputs.
-        run: nix flake show --no-warn-dirty --allow-dirty
+        run: nix flake show --no-update-lock-file --no-warn-dirty --allow-dirty
