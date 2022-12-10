@@ -23,8 +23,8 @@ jobs:
             show-trace = true
             enforce-determinism = true
       - name: pre-fetch flake's dependencies.
-        run: nix flake lock --recreate-lock-file
+        run: nix flake lock --refresh
       - name: nix flake inputs.
-        run: nix flake metadata --no-update-lock-file
+        run: nix flake metadata --offline --quiet
       - name: nix flake outputs.
-        run: nix flake show --no-update-lock-file
+        run: nix flake show --offline --quiet
