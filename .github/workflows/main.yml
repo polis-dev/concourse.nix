@@ -22,9 +22,9 @@ jobs:
             experimental-features = flakes nix-command ca-derivations
             show-trace = true
             enforce-determinism = true
-      - name: generate lock file.
-        run: nix flake lock --quiet
-      - name: nix flake inputs.
+      - name: initialize flake.
+        run: nix flake prefetch --quiet
+      - name: flake inputs.
         run: nix flake metadata --offline --quiet
-      - name: nix flake outputs.
+      - name: flake outputs.
         run: nix flake show --offline --quiet
