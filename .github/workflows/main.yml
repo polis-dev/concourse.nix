@@ -23,7 +23,7 @@ jobs:
             preallocate-contents = true
             max-jobs = auto
             allow-dirty = true
-            experimental-features = flakes nix-command
+            experimental-features = flakes nix-command ca-derivations
             show-trace = true
             enforce-determinism = true
       - name: initialize flake.
@@ -33,7 +33,7 @@ jobs:
       - name: flake outputs.
         run: nix flake show --offline --quiet
       - name: build default package.
-        run: nix build --offline
+        run: nix build
       - name: output fly version.
         run: ./result/bin/fly --version
       - name: output concourse version.
