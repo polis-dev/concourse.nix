@@ -23,7 +23,7 @@ jobs:
             show-trace = true
             enforce-determinism = true
       - name: generate lock file.
-        run: nix flake lock --refresh --quiet
+        run: nix flake lock --quiet
       - name: nix flake inputs.
         run: nix flake metadata --offline --quiet
       - name: nix flake outputs.
