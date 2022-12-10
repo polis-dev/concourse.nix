@@ -30,7 +30,7 @@
             rev = "v${version}";
             sha256 = "sha256-YatN0VG3oEUK+vzJzthRnX+EkvUgKq2uIunAoPMoRag=";
           };
-          ldflags = ["-s" "-w"];
+          ldflags = ["-s" "-w" "-X github.com/concourse/concourse.Version=${version}"];
           doCheck = false;
           meta.description = "Concourse CI/CD system";
           meta.homepage = "https://github.com/concourse/concourse";
@@ -48,8 +48,14 @@
       });
     # defines the apps(s) exported by this flake.
     apps = self.lib.eachSystemMap self.lib.defaultSystems (system: rec {
-      concourse = self.lib.mkApp { name = "concourse"; drv = self.packages.${system}.default; };
-      fly = self.lib.mkApp { name = "fly"; drv = self.packages.${system}.default; };
+      concourse = self.lib.mkApp {
+        name = "concourse";
+        drv = self.packages.${system}.default;
+      };
+      fly = self.lib.mkApp {
+        name = "fly";
+        drv = self.packages.${system}.default;
+      };
       default = fly;
     });
 
