@@ -36,7 +36,7 @@
             CGO_ENABLED = "0";
             GO111MODULE = "on";
             GOPROXY = "direct";
-            GOPRIVATE = "github.com/digitalocean";
+            GOPRIVATE = "github.com/concourse";
             GOFLAGS = "-trimpath";
             GONOPROXY = GOPRIVATE;
             GONOSUMDB = GOPRIVATE;
