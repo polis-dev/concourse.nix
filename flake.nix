@@ -12,8 +12,11 @@
     ...
   }: rec {
     lib = self.inputs.pnix.lib;
+    # defines an overlay for using this flake via nixpkgs.
     overlays.default = final: prev: {concourse = (self.packages.${prev.system}).default;};
-
+    # sets the formatter to be alejandra.
+    formatter = self.lib.eachSystemMap self.lib.defaultSystems (system: (import nixpkgs {inherit system;}).alejandra);
+    # defines the package(s) exported by this flake.
     packages = self.lib.eachSystemMap self.lib.defaultSystems (system:
       with (import nixpkgs {inherit system;}); {
         default = buildGo118Module rec {
@@ -74,11 +77,14 @@
           environment.systemPackages = [concourse.package];
         };
     };
-
+    /*
+    example usage in NixOS
+    */
     nixosConfigurations.default = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {inherit nixpkgs system self;};
       modules = [
+        self.nixosModules.default
         ({
           config,
           lib,
