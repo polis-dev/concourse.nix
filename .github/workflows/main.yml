@@ -22,8 +22,8 @@ jobs:
             experimental-features = flakes nix-command ca-derivations
             show-trace = true
             enforce-determinism = true
-      - name: pre-fetch flake's dependencies.
-        run: nix flake lock --refresh
+      - name: generate lock file.
+        run: nix flake lock --refresh --quiet
       - name: nix flake inputs.
         run: nix flake metadata --offline --quiet
       - name: nix flake outputs.
