@@ -61,7 +61,7 @@
           type = lib.types.package;
           defaultText = lib.literalExpression "pkgs.concourse";
           description = lib.mdDoc "relevant package to use.";
-          default = self.packages.${config.nixpkgs.system}.concourse;
+          default = self.packages.${config.nixpkgs.system}.default;
         };
       };
       /*
