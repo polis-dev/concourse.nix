@@ -46,6 +46,12 @@
           };
         };
       });
+    # defines the apps(s) exported by this flake.
+    apps = self.lib.eachSystemMap self.lib.defaultSystems (system: rec {
+      concourse = self.lib.mkApp { name = "concourse"; drv = self.packages.${system}.default; };
+      fly = self.lib.mkApp { name = "fly"; drv = self.packages.${system}.default; };
+      default = fly;
+    });
 
     nixosModules.default = {
       config,
