@@ -58,43 +58,10 @@
       };
       default = fly;
     });
-
-    nixosModules.default = {
-      config,
-      lib,
-      pkgs,
-      options,
-      ...
-    }: {
-      /*
-      Concourse Service Configuration Options
-      */
-      options.services.concourse = {
-        enable = lib.mkEnableOption "enable concourse CI/CD service?";
-
-        package = lib.mkOption {
-          type = lib.types.package;
-          defaultText = lib.literalExpression "pkgs.concourse";
-          description = lib.mdDoc "relevant package to use.";
-          default = self.packages.${config.nixpkgs.system}.default;
-        };
-      };
-      /*
-      Concourse Configuration
-      */
-      config = let
-        concourse = config.services.concourse;
-      in
-        lib.mkIf concourse.enable {
-          environment.systemPackages = [concourse.package];
-        };
-    };
-    /*
-    example usage in NixOS
-    */
-    nixosConfigurations.default = nixpkgs.lib.nixosSystem rec {
+    # the default NixOS configuration serves as an example/demo.
+    nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = {inherit nixpkgs system self;};
+      specialArgs = {inherit nixpkgs self;};
       modules = [
         self.nixosModules.default
         ({
@@ -108,6 +75,33 @@
           };
         })
       ];
+    };
+    # the remainder ofthe file is dedicated to the nixOS module.
+    nixosModules.default = {
+      config,
+      lib,
+      pkgs,
+      options,
+      ...
+    }: {
+      # define the options that an end-user might want to configure.
+      options = {
+        services.concourse = {
+          enable = lib.mkEnableOption "enable concourse CI/CD service?";
+
+          package = lib.mkOption {
+            type = lib.types.package;
+            defaultText = lib.literalExpression "pkgs.concourse";
+            description = lib.mdDoc "relevant package to use.";
+            default = self.packages.${config.nixpkgs.system}.default;
+          };
+        };
+      };
+      # utilise the defined options for this module to configure concourse.
+      config = with config.services.concourse;
+        lib.mkIf enable {
+          environment.systemPackages = [package];
+        };
     };
   };
 }
