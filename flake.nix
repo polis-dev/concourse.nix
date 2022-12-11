@@ -20,7 +20,7 @@
         }));
   in rec {
     # defines an overlay for using this flake via nixpkgs.
-    overlays.default = final: prev: {
+    overlays.default = final: prev: rec {
       concourse = prev.buildGo118Module rec {
         pname = "concourse";
         version = "7.9.0";
@@ -64,7 +64,7 @@
         name = "fly";
         drv = self.packages.${system}.default;
       };
-      default = fly;
+      default = concourse;
     });
     # the remainder ofthe file is dedicated to the nixOS module.
     nixosModules.default = {
@@ -97,6 +97,12 @@
             default = "concourse";
           };
 
+          logLevel = lib.mkOption {
+            description = lib.mdDoc "log level";
+            type = lib.types.enum ["debug" "info" "warn" "trace"];
+            default = "debug";
+          };
+
           package = lib.mkOption {
             type = lib.types.package;
             defaultText = lib.literalExpression "pkgs.concourse";
@@ -118,7 +124,7 @@
         # env represents the (shared) environment as it will be presented to
         # concourse by systemd.
         env = {
-          CONCOURSE_LOG_LEVEL = "debug";
+          CONCOURSE_LOG_LEVEL = cfg.logLevel;
         };
 
         envFileLines = lib.concatLists (lib.mapAttrsToList (name: value: (lib.optionals (value != null) ["${name}=\"${toString value}\""])) env);

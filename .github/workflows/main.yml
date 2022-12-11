@@ -33,11 +33,11 @@ jobs:
       - name: flake outputs.
         run: nix flake show --offline --quiet
       - name: build default package.
-        run: nix build
-      - name: output fly version.
-        run: ./result/bin/fly --version
-      - name: output concourse version.
-        run: ./result/bin/fly --version
+        run: nix build && echo "$PWD/result/bin" >>$GITHUB_PATH
+      - name: output fly version & --help.
+        run: fly --version && echo && fly --help
+      - name: output concourse version & --help.
+        run: concourse --version && echo && concourse --help
       - name: upload result.
         uses: actions/upload-artifact@v3
         with:
