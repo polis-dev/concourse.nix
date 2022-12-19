@@ -8,7 +8,7 @@
   # options are in their own file for clarity/visibility.
   imports = [./module.options.nix];
   # utilise the defined options for this module to configure concourse.
-  config = lib.mkIf config.services.concourse.enable let
+  config = let
     # cfg represents the current configuration at the time of rebuild.
     cfg = config.services.concourse;
     # env represents the (shared) environment as it will be presented to
@@ -17,9 +17,11 @@
     env.CONCOURSE_ROOT_DIR = cfg.home;
 
     # builds a simple key-value environment file from the env attrset.
-    envFile = builtins.toFile "concourse.env" (lib.concatMapStrings (s: s + "\n") lib.concatLists 
-      (lib.mapAttrsToList (name: value: (lib.optionals (value != null) ["${name}=\"${toString value}\""])) env));
-  in {
+    envFile =
+      builtins.toFile "concourse.env" (lib.concatMapStrings (s: s + "\n") lib.concatLists
+        (lib.mapAttrsToList (name: value: (lib.optionals (value != null) ["${name}=\"${toString value}\""])) env));
+  in
+    lib.mkIf cfg.enable {
       assertions = lib.mapAttrsToList (message: assertion: {inherit assertion message;}) {
         "<option>services.concourse.user</option> needs to be set if <option>services.concourse</option> is enabled." =
           cfg.enable -> (cfg.user != null);
