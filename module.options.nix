@@ -44,7 +44,7 @@
         type = lib.types.package;
         defaultText = lib.literalExpression "pkgs.concourse";
         description = lib.mdDoc "relevant package to use.";
-        default = self.packages.${config.nixpkgs.system}.default;
+        default = pkgs.concourse;
       };
 
       database = {

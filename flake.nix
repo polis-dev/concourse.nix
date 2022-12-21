@@ -24,6 +24,7 @@
 
     # sets the formatter to be alejandra.
     formatter = fromPkgs (p: p.alejandra);
+
     # defines the package(s) exported by this flake.
     packages = fromPkgs (p: {
       inherit (p) concourse;
