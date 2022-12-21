@@ -47,8 +47,47 @@
         default = pkgs.concourse;
       };
 
-      database = {
-        auto = lib.mkEnableOption "auto-configure postgres for concourse?";
+      db = {
+        auto = lib.mkOption {
+          description = lib.mdDoc "automatically setup (local) postgres server for concourse?";
+          type = lib.types.bool;
+          default = true;
+        };
+
+        host = lib.mkOption {
+          type = lib.types.str;
+          default = "/run/postgresql";
+          example = "10.55.55.55";
+          description = lib.mdDoc "postgres host address or unix socket.";
+        };
+
+        port = lib.mkOption {
+          type = lib.types.int;
+          default = 5432;
+          description = lib.mdDoc "postgres host port.";
+        };
+
+        name = lib.mkOption {
+          type = lib.types.str;
+          default = "concourse";
+          description = lib.mdDoc "postgres database name.";
+        };
+
+        user = lib.mkOption {
+          type = lib.types.str;
+          default = "concourse";
+          description = lib.mdDoc "postgres database user.";
+        };
+
+        passwordFile = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = "/var/lib/concourse/secrets/db-password";
+          example = "/run/keys/concourse-db-password";
+          description = lib.mdDoc ''
+            A file containing the password corresponding to
+            {option}`database.user`.
+          '';
+        };
       };
 
       web = {
