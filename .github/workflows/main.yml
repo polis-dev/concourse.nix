@@ -17,8 +17,6 @@ jobs:
         uses: polis-dev/acts/setup-nix@main
         with:
           packages: cachix
-          nix_path: >-
-            nixpkgs=channel:nixpkgs-unstable
           extra_nix_config: |-
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
             warn-dirty = false
