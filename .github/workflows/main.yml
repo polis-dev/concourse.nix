@@ -19,14 +19,6 @@ jobs:
           packages: cachix
           extra_nix_config: |-
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-            warn-dirty = false
-            print-missing = false
-            preallocate-contents = true
-            max-jobs = auto
-            allow-dirty = true
-            experimental-features = flakes nix-command ca-derivations
-            show-trace = true
-            enforce-determinism = true
 
       - name: initialize flake.
         run: nix flake prefetch --quiet
